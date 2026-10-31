@@ -1,6 +1,10 @@
 # Episode-53
 Testing Models on a Mac Mini
 
+📺 YouTube video: https://youtu.be/v5TdxJjmmu4
+
+🏠 Code it with AI Home Page: https://codeitwithai.com
+
 # Local LLM Benchmarks - Comprehensive Comparison
 
 This document compares local LLM inference setups:
