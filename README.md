@@ -92,3 +92,67 @@ Because no reliable, comparable benchmark data could be obtained, **vLLM + Devst
 - For vision tasks: RTX 5090 box provides significantly better performance
 - For maximum local text throughput: RTX 5090 box (NInfer)
 
+# Moe vs. Dense
+
+MoE (Mixture of Experts) and Dense describe two different architectures for large language models (LLMs). The biggest difference is how many of the model's parameters are actually used to generate each token.
+1. Dense models
+A Dense model uses essentially all of its neural network parameters every time it processes a token.
+
+For example, a 32-billion-parameter Dense model activates all 32 billion parameters for each token.
+Dense architecture
+All model parameters participate in processing each token (simplified).
+Advantages: Predictable computational workload, straightforward architecture, and often strong performance for a given total parameter count.
+
+Disadvantage: Every token requires computation through the entire model.
+2. MoE — Mixture of Experts
+An MoE model contains multiple groups of neural network parameters called experts. A routing mechanism selects only a few experts to process each token.
+
+For example, imagine a model with:
+- 120 billion total parameters
+- 8 experts
+- 2 experts selected per token
+- 20 billion active parameters per token (hypothetically, including shared parameters)
+Mixture of Experts architecture
+
+Active experts
+
+Inactive experts
+
+
+Advantages: MoE models can have much greater total capacity without requiring computation through every parameter for each token.
+
+Disadvantages: They still need memory for all the model weights, and routing introduces complexity and potentially irregular memory access.
+3. Why this matters when running local LLMs
+Here's the important distinction, especially when you're running models on a GPU.
+Characteristic	Dense 32B	MoE 120B / 20B active
+Total parameters	32B	120B
+Active parameters/token	~32B	~20B
+Weight memory at 4-bit (approx.)	16 GB	60 GB
+Computation/token	Higher than 20B active	Lower than 32B dense, broadly speaking
+Fits in 32 GB VRAM?	Usually	No
+
+Actual memory requirements are higher because of quantization metadata, KV cache, and runtime overhead.
+
+Here's the catch: Even though the MoE model activates only 20B parameters, it still needs access to all 120B parameters because different tokens may select different experts.
+
+If the weights don't fit in VRAM, some must reside in system RAM, which can severely reduce generation speed.
+4. Is MoE better than Dense?
+Not necessarily.
+
+An MoE model with 120B total and 20B active parameters may outperform a 32B Dense model on some benchmarks while requiring less arithmetic per generated token.
+
+But it doesn't automatically outperform the Dense model. Training quality, architecture, data, and quantization matter enormously.
+
+And the MoE model can be much harder to run locally because of its larger memory footprint.
+5. What this means for your RTX 5090
+With your 32 GB RTX 5090, a 32B Dense model at 4-bit quantization is a natural fit, with room left for some KV cache.
+
+A 120B MoE model with 20B active parameters would typically require substantial CPU RAM offloading, despite potentially performing less computation per token.
+
+This is why the two numbers often appear together in MoE model descriptions:
+
+120B-A20B means approximately 120 billion total parameters, with 20 billion active per token.
+
+The key takeaway is that total parameters largely determine weight memory requirements, while active parameters largely determine computational requirements.
+
+For local inference, you need to pay attention to both.
