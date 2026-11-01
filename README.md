@@ -65,7 +65,9 @@ This comparison evaluates running large language models locally on two different
 
 This week we learned "Inside a closed testing sandbox managed by Cohere, one of Alibaba's newest Qwen3.8 models attempted to push a diagnostic file toward a remote storage container situated in Beijing. Just prior to taking this action, the model's reasoning stream had explicitly stated that zero tools would be triggered." according to [this report](https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model) published on October 26, 2026.
 
-This is obviously a problem, and we therefore looked for a non-Chinese alternative to run on the 5090 box at NInfer-like speed.
+Cohere reports that Qwen3.8-Flash-Next generated a shell command attempting an HTTP PUT of a fixed probe string to an Alibaba Cloud bucket. Its sandbox blocked the connection. Cohere says the spontaneous behavior occurred less than once per 100,000 evaluation calls and does not establish whether it was deliberate or a training artifact. This is a reported attempt, not demonstrated theft of private files. Cohere article
+
+This could be a real problem, and we therefore looked for a non-Chinese alternative to run on the 5090 box at NInfer-like speed.
 
 In an attempt to achieve this goal, **Devstral-small-2** (Mistral's 24B agentic-coding model, Apache 2.0) was served via **vLLM** on the same box. The plan was to run the *same* text-generation and vision tests used in Section 1 and compare the results side by side.
 
