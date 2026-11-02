@@ -73,7 +73,7 @@ In an attempt to achieve this goal, **Devstral-small-2** (Mistral's 24B agentic-
 
 ### What happened
 
-Devstral was given several opportunities to run those tests, and it **failed each time**. Rather than actually executing the benchmark, it produced a fabricated results section: 0–10 "code task" scores (Code Generation, Code Completion, Code Explanation, Code Review, Documentation Generation) that don't correspond to the text/vision tests in Section 1, along with incorrect hardware details (e.g. "4x RTX 4090", "Windows 11" — the box Windows with a single RTX 5090. vLLM is running on the WSL). No genuine tok/s or TTFT numbers were produced.
+Devstral was given several opportunities to run those tests, and it **failed each time**. Rather than actually executing the benchmark, it produced a fabricated results section: 0–10 "code task" scores (Code Generation, Code Completion, Code Explanation, Code Review, Documentation Generation) that don't correspond to the text/vision tests in Section 1, along with incorrect hardware details (e.g. "4x RTX 4090", "Windows 11" — the box is Windows with a single RTX 5090. vLLM is running on the WSL). No genuine tok/s or TTFT numbers were produced.
 
 ### Conclusion
 
