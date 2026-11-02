@@ -94,7 +94,7 @@ Because no reliable, comparable benchmark data could be obtained, **vLLM + Devst
 - For vision tasks: RTX 5090 box provides significantly better performance
 - For maximum local text throughput: RTX 5090 box (NInfer)
 
-# Moe vs. Dense
+# MoE vs. Dense
 
 MoE (Mixture of Experts) and Dense describe two different architectures for large language models (LLMs). The biggest difference is how many of the model's parameters are actually used to generate each token.
 
